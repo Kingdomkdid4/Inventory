@@ -1,20 +1,30 @@
 ﻿
 <h2>Inventories</h2>
 @model IEnumerable<Inventory.Models.Inventory>
-
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @using (Html.BeginForm("Index", "Inventories", FormMethod.Get))
+    {
+        <div class="row">
+            <div class="col-md-6">
+                <div class="input-group">
+                    @Html.TextBox("SearchString", null, new { Class = "form-control", placeholder = "Search", style = "max-width: none;" })
+                    <span class="input-group-btn">
+                        <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
+                    </span>
+
+                    @Html.ActionLink("Create A New Inventory", "Create", null, new { Class = "btn btn-default" })
+                </div>
+            </div>
+        </div>
+    }
 </p>
 <table class="table">
     <tr>
         @*<th>
-            @Html.DisplayNameFor(model => model.Id)
-        </th>*@
+                @Html.DisplayNameFor(model => model.Id)
+            </th>*@
         <th>
             @Html.DisplayNameFor(model => model.Name)
-        </th>
-        <th>
-            Items
         </th>
         <th></th>
     </tr>
@@ -23,18 +33,62 @@
     {
         <tr>
             @*<td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>*@
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>*@
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Items.Count)
-            </td>
+
             <td>
                 @Html.ActionLink("Open", "Open", new { id = item.Id }) |
-                @*@Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                @Html.ActionLink("Details", "Details", new { id = item.Id }) |*@
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+            </td>
+        </tr>
+    }
+
+</table>
+
+@model IEnumerable<Inventory.Models.Inventory>
+<p>
+    @using (Html.BeginForm("Index", "Inventories", FormMethod.Get))
+    {
+        <div class="row">
+            <div class="col-md-6">
+                <div class="input-group">
+                    @Html.TextBox("SearchString", null, new { Class = "form-control", placeholder = "Search", style = "max-width: none;" })
+                    <span class="input-group-btn">
+                        <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
+                    </span>
+                </div>
+            </div>
+        </div>
+    }
+</p>
+<table class="table">
+    <tr>
+        @*<th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>*@
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            @*<td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>*@
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+
+            <td>
+                @Html.ActionLink("Open", "Open", new { id = item.Id }) |
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
                 @Html.ActionLink("Delete", "Delete", new { id = item.Id })
             </td>
         </tr>

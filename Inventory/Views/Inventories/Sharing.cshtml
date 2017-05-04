@@ -1,0 +1,37 @@
+﻿@model Inventory.Models.Sharing
+
+
+<h2>Who would you like to share with?</h2>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-group">
+
+    @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(model => model.InventoryId)
+
+    <h4>Email</h4>
+    <div class="form-group">
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class=" pull-left"></div>
+    @Html.RadioButtonFor(model => model.Permission, 1, new { id = "readPerm" })
+    @Html.Label("readPerm", "Read")
+
+    @Html.RadioButtonFor(model => model.Permission, 2, new { id = "addPerm" })
+    @Html.Label("addPerm", "Add")
+
+    @Html.RadioButtonFor(model => model.Permission, 3, new { id = "editPerm" })
+    @Html.Label("editPerm", "Edit")
+
+    @Html.RadioButtonFor(model => model.Permission, 4, new { id = "adminPerm" })
+    @Html.Label("adminPerm", "Admin")
+
+            <button class="btn btn-default" type="submit" id="ShareAndReturn" name="action" value="ShareAndReturn">Share & Return to Inventory</button>
+            <button class="btn btn-primary" type="submit" id="ShareAndShare" name="action" value="ShareAndShare">Share & add another person</button>
+        </div>
+}

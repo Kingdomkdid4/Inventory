@@ -203,12 +203,42 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201702281921007_InitialCreate.cs" />
+    <Compile Include="Migrations\201702281921007_InitialCreate.Designer.cs">
+      <DependentUpon>201702281921007_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703161625204_CleanUpItemModel.cs" />
+    <Compile Include="Migrations\201703161625204_CleanUpItemModel.Designer.cs">
+      <DependentUpon>201703161625204_CleanUpItemModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703170519595_addDefault.cs" />
+    <Compile Include="Migrations\201703170519595_addDefault.Designer.cs">
+      <DependentUpon>201703170519595_addDefault.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201704182131312_InStock.cs" />
+    <Compile Include="Migrations\201704182131312_InStock.Designer.cs">
+      <DependentUpon>201704182131312_InStock.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201704182137113_Typo.cs" />
+    <Compile Include="Migrations\201704182137113_Typo.Designer.cs">
+      <DependentUpon>201704182137113_Typo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201704280617524_Sharing.cs" />
+    <Compile Include="Migrations\201704280617524_Sharing.Designer.cs">
+      <DependentUpon>201704280617524_Sharing.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201704281929130_SharingDb.cs" />
+    <Compile Include="Migrations\201704281929130_SharingDb.Designer.cs">
+      <DependentUpon>201704281929130_SharingDb.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\Inventory.cs" />
     <Compile Include="Models\InventoryDbContext.cs" />
     <Compile Include="Models\Item.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\Sharing.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -224,6 +254,7 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="ClassDiagram1.cd" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -272,13 +303,19 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Inventories\Index.cshtml" />
     <Content Include="Views\Inventories\Create.cshtml" />
-    <Content Include="Views\Inventories\Details.cshtml" />
-    <Content Include="Views\Inventories\SearchIndex.cshtml" />
     <Content Include="Views\Inventories\Open.cshtml" />
+    <Content Include="Views\Item\Create.cshtml" />
+    <Content Include="Views\Inventories\Delete.cshtml" />
+    <Content Include="Views\Inventories\Edit.cshtml" />
+    <Content Include="Views\Item\Edit.cshtml" />
+    <Content Include="Views\Item\Delete.cshtml" />
+    <Content Include="Views\Item\test.cshtml" />
+    <Content Include="Views\Item\Details.cshtml" />
+    <Content Include="Views\Inventories\Sharing.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Item\" />
+    <Folder Include="Views\World\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -287,6 +324,29 @@
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201702281921007_InitialCreate.resx">
+      <DependentUpon>201702281921007_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703161625204_CleanUpItemModel.resx">
+      <DependentUpon>201703161625204_CleanUpItemModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703170519595_addDefault.resx">
+      <DependentUpon>201703170519595_addDefault.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704182131312_InStock.resx">
+      <DependentUpon>201704182131312_InStock.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704182137113_Typo.resx">
+      <DependentUpon>201704182137113_Typo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704280617524_Sharing.resx">
+      <DependentUpon>201704280617524_Sharing.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704281929130_SharingDb.resx">
+      <DependentUpon>201704281929130_SharingDb.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

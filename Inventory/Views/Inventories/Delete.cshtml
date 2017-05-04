@@ -1,0 +1,22 @@
+﻿@model Inventory.Models.Inventory
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete @Html.DisplayFor(model => model.Name)?</h3>
+<div>
+    <hr />
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Yes" class="btn btn-default" />
+            @*@Html.ActionLink("Open", "Inventories", new { id = Items.InventoryId })*@
+        </div>
+    }
+</div>

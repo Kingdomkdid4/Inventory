@@ -20,14 +20,14 @@ namespace Inventory.Models
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-        public ApplicationDbContext()
-            : base("DefaultConnection", throwIfV1Schema: false)
+        public ApplicationDbContext(string databaseConnection)
+            : base(databaseConnection, throwIfV1Schema: false)
         {
         }
 
-        public static ApplicationDbContext Create()
+        public static ApplicationDbContext Create(string databaseConnection)
         {
-            return new ApplicationDbContext();
+            return new ApplicationDbContext(databaseConnection);
         }
     }
 }

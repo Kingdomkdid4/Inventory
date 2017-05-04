@@ -9,6 +9,7 @@ namespace Inventory.Models
     public class InventoryDbContext : DbContext
     {
         public DbSet<Item> Items { get; set; }
+        public DbSet<Sharing> SharedUsers { get; set; }
         public DbSet<Inventory> Inventories { get; set; }
     }
 }

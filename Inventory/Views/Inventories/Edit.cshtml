@@ -1,4 +1,5 @@
-﻿@model Inventory.Models.Inventory
+﻿@model InventoryManager.InventoryViewModel
+@using InventoryManager.Models
 
 @{
     ViewBag.Title = "Edit";
@@ -16,6 +17,8 @@
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.UserId)
 
+        @if (Model.Permission == AccessLevel.Admin)
+        {
         <div class="form-group">
             @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
@@ -23,7 +26,7 @@
                 @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
             </div>
         </div>
-
+        }
         <div class="form-group">
             @Html.LabelFor(model => model.DefaultName, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">

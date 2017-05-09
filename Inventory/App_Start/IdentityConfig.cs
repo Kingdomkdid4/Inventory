@@ -10,9 +10,9 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
-using Inventory.Models;
+using InventoryManager.Models;
 
-namespace Inventory
+namespace InventoryManager
 {
     public class EmailService : IIdentityMessageService
     {

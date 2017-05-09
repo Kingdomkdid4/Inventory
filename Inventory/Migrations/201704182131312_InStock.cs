@@ -1,4 +1,4 @@
-namespace Inventory.Migrations
+namespace InventoryManager.Migrations
 {
     using System;
     using System.Data.Entity.Migrations;

@@ -1,4 +1,5 @@
-﻿@model Inventory.Models.Inventory
+﻿@model InventoryManager.InventoryViewModel
+@using InventoryManager.Models
 
 @{
     ViewBag.Title = "Open";
@@ -9,94 +10,99 @@
     @Html.HiddenFor(model => model.Id)
     <h2>@Html.DisplayFor(model => model.Name)</h2>
 
-        @*<div class="col-lg-3 col-md-3 col-sm-4 col-xs-6 pull-right">
-            <label for="categoryDrop">Filter by Category</label>
-            @Html.DropDownList("itemCategory", ViewBag.itemCategory as SelectList, "All", new { @class = "form-control", id = "categoryDrop" })
-            <label for="typeDrop">Filter by Type</label>
-            @Html.DropDownList("itemType", ViewBag.itemType as SelectList, "All", new { @class = "form-control", id = "typeDrop" })
-            <label for="sizeDrop">Filter by Size</label>
-            @Html.DropDownList("itemSize", ViewBag.itemSize as SelectList, "All", new { @class = "form-control", id="sizeDrop"})
-         </div>*@
+    @*<div class="col-lg-3 col-md-3 col-sm-4 col-xs-6 pull-right">
+           <label for="categoryDrop">Filter by Category</label>
+           @Html.DropDownList("itemCategory", ViewBag.itemCategory as SelectList, "All", new { @class = "form-control", id = "categoryDrop" })
+           <label for="typeDrop">Filter by Type</label>
+           @Html.DropDownList("itemType", ViewBag.itemType as SelectList, "All", new { @class = "form-control", id = "typeDrop" })
+           <label for="sizeDrop">Filter by Size</label>
+           @Html.DropDownList("itemSize", ViewBag.itemSize as SelectList, "All", new { @class = "form-control", id="sizeDrop"})
+        </div>*@
 
-                @*<div class="col-md-3 col-sm-3">
-                    <div class="input-group">
-                        @Html.TextBox("SearchString", null, new { Class = "form-control", placeholder = "Search", style = "max-width: none;" })
-                        <span class="input-group-btn">
-                            <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
-                        </span>
-                    </div>
-                </div>*@
+    @*<div class="col-md-3 col-sm-3">
+            <div class="input-group">
+                @Html.TextBox("SearchString", null, new { Class = "form-control", placeholder = "Search", style = "max-width: none;" })
+                <span class="input-group-btn">
+                    <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
+                </span>
+            </div>
+        </div>*@
 
-    @Html.ActionLink("Create A New Item", "Create", "Item", new { inventoryId = Model.Id }, new { Class = "btn btn-default pull-right" })
-    @Html.ActionLink("Share this Inventory", "Sharing", "Inventories", new { inventoryId = Model.Id }, new { Class = "btn btn-primary pull-right" })
-    @Html.ActionLink("Edit the Inventroy and Item Defaults", "Edit", "Inventories", new { Id = Model.Id }, new { Class = "btn btn-default pull-right" })
-
-<table class="table table-hover">
-    <tr>
-        <th>
-            @*@Html.DisplayNameFor(model => model.Items.GetElementAt(0).Name)*@ Name
-        </th>
-        <th>
-            @*@Html.DisplayNameFor(model => model.Items[0].Category)*@ Category
-        </th>
-        <th>
-            @*@Html.DisplayNameFor(model => model.Items[0].Type)*@ Type
-        </th>
-        <th>
-            @*@Html.DisplayNameFor(model => model.Items[0].Amount)*@ In Stock
-        </th>
-        <th>
-            @*@Html.DisplayNameFor(model => model.Items.GetElementAt(0).Size)*@ Size
-        </th>
-        <th>
-            Color
-        </th>
-        <th></th>
-    </tr>
-    <tr>
-        <td>@Html.TextBox("SearchString", null, new { Class = "form-control", placeholder = "Search", style = "max-width: none;" })</td>
-        <td>@Html.DropDownList("itemCategory", ViewBag.itemCategory as SelectList, "All", new { @class = "form-control" })</td>
-        <td>@Html.DropDownList("itemType", ViewBag.itemType as SelectList, "All", new { @class = "form-control" })</td>
-        <td></td>
-        <td>@Html.DropDownList("itemSize", ViewBag.itemSize as SelectList, "All", new { @class = "form-control" })</td>
-        <td></td>
-        <td><button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button></td>
-    </tr>
-
-    @foreach (var item in Model.Items)
+    if (Model.Permission == AccessLevel.Admin || Model.Permission == AccessLevel.Add || Model.Permission == AccessLevel.Edit)
     {
-        <tr>
-            @*<td>
-                    @Html.DisplayFor(modelItem => item.Id)
-                </td>*@
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Category)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Type)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.InStock) Of @Html.DisplayFor(modelItem => item.Total)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Size)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Color)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", "Item", new { Id = item.Id }, null) |
-                @Html.ActionLink("Delete", "Delete", "Item", new { id = item.Id }, null)
-            </td>
-           @* <td>
-                @if (!item.inStock)
-                {
-                }
-            </td>*@
-        </tr>
+        @Html.ActionLink("Create A New Item", "Create", "Item", new { inventoryId = Model.Id }, new { Class = "btn btn-default pull-right" });
     }
-</table>
+    if (Model.Permission == AccessLevel.Admin)
+    {
+        @Html.ActionLink("Share this Inventory", "Sharing", "Inventories", new { inventoryId = Model.Id }, new { Class = "btn btn-primary pull-right" });
+    }
+    if (Model.Permission == AccessLevel.Admin || Model.Permission == AccessLevel.Add || Model.Permission == AccessLevel.Edit)
+    {
+        @Html.ActionLink("Edit the Inventory and Item Defaults", "Edit", "Inventories", new { Id = Model.Id }, new { Class = "btn btn-default pull-right" });
+    }
+
+    <table class="table table-hover">
+        <tr>
+            <th>
+                @*@Html.DisplayNameFor(model => model.Items.GetElementAt(0).Name)*@ Name
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.Items[0].Category)*@ Category
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.Items[0].Type)*@ Type
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.Items[0].Amount)*@ In Stock
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.Items.GetElementAt(0).Size)*@ Size
+            </th>
+            <th>
+                Color
+            </th>
+            <th></th>
+        </tr>
+        <tr>
+            <td>@Html.TextBox("SearchString", null, new { Class = "form-control", placeholder = "Search", style = "max-width: none;" })</td>
+            <td>@Html.DropDownList("itemCategory", ViewBag.itemCategory as SelectList, "All", new { @class = "form-control" })</td>
+            <td>@Html.DropDownList("itemType", ViewBag.itemType as SelectList, "All", new { @class = "form-control" })</td>
+            <td></td>
+            <td>@Html.DropDownList("itemSize", ViewBag.itemSize as SelectList, "All", new { @class = "form-control" })</td>
+            <td></td>
+            <td><button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button></td>
+        </tr>
+
+        @foreach (var item in Model.Items)
+        {
+            <tr>
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.Id)
+                    </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Category)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Type)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.InStock) Of @Html.DisplayFor(modelItem => item.Total)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Size)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Color)
+                </td>
+                <td>
+                    <button class="btn btn-default" type="submit" id="edit" name="action" value="Edit">Edit</button>
+                    <button class="btn btn-primary" type="submit" id="delete" name="action" value="Delete">Delete</button>
+                    <button class="btn btn-default" type="submit" id="details" name="action" value="Details">Details</button>
+                </td>
+            </tr>
+        }
+    </table>
 }

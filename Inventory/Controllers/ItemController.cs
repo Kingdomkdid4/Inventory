@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using Inventory.Models;
+using InventoryManager.Models;
 using System.Net;
 using Microsoft.AspNet.Identity;
 using System.Data.Entity;
 using System.IO;
 
-namespace Inventory.Controllers
+namespace InventoryManager.Controllers
 {
     public class ItemController : Controller
     {

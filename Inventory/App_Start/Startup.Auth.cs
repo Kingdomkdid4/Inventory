@@ -5,10 +5,10 @@ using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.Google;
 using Owin;
-using Inventory.Models;
+using InventoryManager.Models;
 using System.Configuration;
 
-namespace Inventory
+namespace InventoryManager
 {
     public partial class Startup
     {

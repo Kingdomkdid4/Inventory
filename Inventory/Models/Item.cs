@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 
-namespace Inventory.Models
+namespace InventoryManager.Models
 {
 
     public class Item

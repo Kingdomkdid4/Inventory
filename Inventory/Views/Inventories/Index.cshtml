@@ -1,6 +1,7 @@
 ﻿
 <h2>Inventories</h2>
-@model IEnumerable<Inventory.Models.Inventory>
+@model InventoryManager.InventoryListViewModel
+@using InventoryManager.Models
 <p>
     @using (Html.BeginForm("Index", "Inventories", FormMethod.Get))
     {
@@ -18,78 +19,67 @@
         </div>
     }
 </p>
+
+<h2>My Inventories</h2>
 <table class="table">
     <tr>
-        @*<th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>*@
         <th>
-            @Html.DisplayNameFor(model => model.Name)
+            Inventory
         </th>
         <th></th>
     </tr>
-
-    @foreach (var item in Model)
+    
+    @foreach (var item in Model.Owned)
     {
         <tr>
-            @*<td>
-                    @Html.DisplayFor(modelItem => item.Id)
-                </td>*@
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
 
             <td>
-                @Html.ActionLink("Open", "Open", new { id = item.Id }) |
-                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                @Html.ActionLink("Open", "Open", new { id = item.Id }, new { Class = "btn btn-default" })
+                @if (item.Permission == AccessLevel.Admin || item.Permission == AccessLevel.Add || item.Permission == AccessLevel.Edit)
+                {
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { Class = "btn btn-primary" })
+                }
+
+                @if (item.Permission == AccessLevel.Admin)
+                {
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { Class = "btn btn-default" })
+                }
             </td>
         </tr>
     }
 
 </table>
 
-@model IEnumerable<Inventory.Models.Inventory>
-<p>
-    @using (Html.BeginForm("Index", "Inventories", FormMethod.Get))
-    {
-        <div class="row">
-            <div class="col-md-6">
-                <div class="input-group">
-                    @Html.TextBox("SearchString", null, new { Class = "form-control", placeholder = "Search", style = "max-width: none;" })
-                    <span class="input-group-btn">
-                        <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
-                    </span>
-                </div>
-            </div>
-        </div>
-    }
-</p>
+<h2>Shared With Me</h2>
 <table class="table">
     <tr>
-        @*<th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>*@
         <th>
-            @Html.DisplayNameFor(model => model.Name)
+            Inventory
         </th>
         <th></th>
     </tr>
 
-    @foreach (var item in Model)
+    @foreach (var item in Model.Shared)
     {
         <tr>
-            @*<td>
-                    @Html.DisplayFor(modelItem => item.Id)
-                </td>*@
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
 
             <td>
-                @Html.ActionLink("Open", "Open", new { id = item.Id }) |
-                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                @Html.ActionLink("Open", "Open", new { id = item.Id }, new { Class = "btn btn-default" })
+                @if (item.Permission == AccessLevel.Admin || item.Permission == AccessLevel.Add || item.Permission == AccessLevel.Edit)
+                {
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { Class = "btn btn-primary" })
+                }
+
+                @if (item.Permission == AccessLevel.Admin)
+                {
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { Class = "btn btn-default" })
+                }
             </td>
         </tr>
     }

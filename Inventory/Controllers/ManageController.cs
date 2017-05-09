@@ -6,9 +6,9 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
-using Inventory.Models;
+using InventoryManager.Models;
 
-namespace Inventory.Controllers
+namespace InventoryManager.Controllers
 {
     [Authorize]
     public class ManageController : Controller

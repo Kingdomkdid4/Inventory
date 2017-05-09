@@ -1,4 +1,4 @@
-﻿using Inventory.Models;
+﻿using InventoryManager.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,8 +8,9 @@ using Microsoft.AspNet.Identity;
 using System.Net;
 using System.Data.Entity;
 using Microsoft.AspNet.Identity.Owin;
+using System.Net.Mail;
 
-namespace Inventory.Controllers
+namespace InventoryManager.Controllers
 {
     public class InventoriesController : Controller
     {
@@ -45,8 +46,8 @@ namespace Inventory.Controllers
 
             string currentUserEmail = User.Identity.GetUserName();
 
-            var owned = db.Inventories.Where(s => s.UserId == currentUser);
-            var shared = db.Inventories.Where(inv => inv.SharedUsers.Where(e => e.Email == currentUserEmail).Any());
+            var owned = db.Inventories.Where(s => s.UserId == currentUser).Select(InventoryViewModel.GetInstantiator(currentUser, currentUserEmail));
+            var shared = db.Inventories.Where(inv => inv.SharedUsers.Where(e => e.Email == currentUserEmail).Any()).Select(InventoryViewModel.GetInstantiator(currentUser, currentUserEmail));
 
             if (!String.IsNullOrEmpty(SearchString))
             {
@@ -55,7 +56,7 @@ namespace Inventory.Controllers
                 shared = shared.Where(s => s.Name.ToLower().Contains(SearchString.ToLower()));
             }
 
-            return View(new { Owned = owned.ToList(), Shared = shared.ToList() });
+            return View(new InventoryListViewModel { Owned = owned.ToList(), Shared = shared.ToList() });
         }
 
         public ActionResult Sharing(int inventoryId)
@@ -74,9 +75,30 @@ namespace Inventory.Controllers
 
             if (ModelState.IsValid && ownedInventory)
             {
-                if (db.userDb.Where(s => s.Email == entry.Email) == null)
+                if (!UserManager.Users.Where(s => s.Email == entry.Email).Any())
                 {
-                    //send email invitation
+                    var body = "<p>Email From: {0} ({1})</p><p>Message:</p><p>{2}</p>";
+                    var message = new MailMessage();
+                    message.To.Add(new MailAddress(entry.Email)); 
+                    message.From = new MailAddress("sender@outlook.com");  // replace with valid value
+                    message.Subject = "Your email subject";
+                    message.Body = string.Format(body/*, model.FromName, model.FromEmail, model.Message*/);
+                    message.IsBodyHtml = true;
+
+                    using (var smtp = new SmtpClient())
+                    {
+                        var credential = new NetworkCredential
+                        {
+                            UserName = "user@outlook.com",  // replace with valid value
+                            Password = "password"  // replace with valid value
+                        };
+                        smtp.Credentials = credential;
+                        smtp.Host = "smtp-mail.outlook.com";
+                        smtp.Port = 587;
+                        smtp.EnableSsl = true;
+                        smtp.Send(message);
+                        return RedirectToAction("Sent");
+                    }
                 }
 
                 db.SharedUsers.Add(entry);
@@ -133,7 +155,9 @@ namespace Inventory.Controllers
         {
             string currentUser = User.Identity.GetUserId();
 
-            Models.Inventory inventory = db.Inventories.Include(inv => inv.Items).Where(inv => inv.Id == id && inv.UserId == currentUser).SingleOrDefault();
+            string currentUserEmail = User.Identity.GetUserName();
+
+            InventoryViewModel inventory = db.Inventories.Include(inv => inv.Items).Where(inv => inv.Id == id && (inv.UserId == currentUser || inv.SharedUsers.Any(s => s.Email == currentUserEmail))).Select(InventoryViewModel.GetInstantiator(currentUser, currentUserEmail)).SingleOrDefault();
             
             var categories = inventory.Items.Select(e => e.Category).Distinct().OrderBy(e => e);
             ViewBag.itemCategory = new SelectList(categories);
@@ -145,7 +169,7 @@ namespace Inventory.Controllers
             var size = inventory.Items.Select(e => e.Size == null ? "N/A" : e.Size).Distinct().OrderBy(e => e);
             ViewBag.itemSize = new SelectList(size);
 
-            if (inventory == null)
+            if (inventory == null || inventory.Permission == null)
             {
                 return HttpNotFound();
             }
@@ -170,13 +194,32 @@ namespace Inventory.Controllers
             return View(inventory);
         }
 
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Open(string action)
+        //{
+        //    if (action == "Edit")
+        //    {
+
+        //    }else if(action == "Edit")
+        //    {
+
+        //    }
+        //}
+
         public ActionResult Delete(int? id)
         {
+            string currentUser = User.Identity.GetUserId();
+
+            string currentUserEmail = User.Identity.GetUserName();
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Models.Inventory inventory = db.Inventories.Find(id);
+
+            InventoryViewModel inventory = db.Inventories.Where(e => e.Id == id).Select(InventoryViewModel.GetInstantiator(currentUser, currentUserEmail)).SingleOrDefault();
+
             if (inventory == null)
             {
                 return HttpNotFound();
@@ -205,13 +248,16 @@ namespace Inventory.Controllers
 
         public ActionResult Edit(int? id)
         {
+            string currentUser = User.Identity.GetUserId();
+
+            string currentUserEmail = User.Identity.GetUserName();
 
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            Models.Inventory inventory = db.Inventories.Find(id);
+            InventoryViewModel inventory = db.Inventories.Where(e => e.Id == id).Select(InventoryViewModel.GetInstantiator(currentUser, currentUserEmail)).SingleOrDefault();
 
             if (inventory == null)
             {
@@ -223,17 +269,13 @@ namespace Inventory.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(/*[Bind(Include = "Name")]*/ Models.Inventory inventory, string action)
+        public ActionResult Edit(/*[Bind(Include = "Name")]*/ Inventory inventory, string action)
         {
             string currentUser = User.Identity.GetUserId();
 
-            inventory.UserId = User.Identity.GetUserId();
+            bool ownedInventory = db.Inventories.Where(e => e.UserId == currentUser && e.Id == inventory.Id).Any();
 
-            ModelState.Clear();
-
-            TryUpdateModel(inventory);
-
-            if (ModelState.IsValid)
+            if (ModelState.IsValid || ownedInventory)
             {
                 db.Entry(inventory).State = EntityState.Modified;
                 db.SaveChanges();

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace Inventory.Models
+namespace InventoryManager.Models
 {
     public class ExternalLoginConfirmationViewModel
     {

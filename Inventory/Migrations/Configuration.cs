@@ -1,19 +1,19 @@
-namespace Inventory.Migrations
+namespace InventoryManager.Migrations
 {
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<Inventory.Models.InventoryDbContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<InventoryManager.Models.InventoryDbContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
-            ContextKey = "Inventory.Models.InventoryDbContext";
+            ContextKey = "InventoryManager.Models.InventoryDbContext";
         }
 
-        protected override void Seed(Inventory.Models.InventoryDbContext context)
+        protected override void Seed(InventoryManager.Models.InventoryDbContext context)
         {
             //  This method will be called after migrating to the latest version.
 

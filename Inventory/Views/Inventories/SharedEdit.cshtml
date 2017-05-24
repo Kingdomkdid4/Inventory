@@ -1,24 +1,26 @@
 ﻿@model InventoryManager.Models.Sharing
 
+@{
+    ViewBag.Title = "SharedEdit";
+}
 
-<h2>Who would you like to share with?</h2>
+<h2>SharedEdit</h2>
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
 
-<div class="form-group">
-
-    @Html.HiddenFor(model => model.Id)
     @Html.HiddenFor(model => model.InventoryId)
 
-    <h4>Email</h4>
     <div class="form-group">
+        @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
             @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
             @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
         </div>
     </div>
-    <div class= " pull-left"></div>
+
+    <div class=" pull-left"></div>
     @Html.RadioButtonFor(model => model.Permission, 0, new { id = "readPerm active" })
     @Html.Label("readPerm", "Read")
 
@@ -31,7 +33,12 @@
     @Html.RadioButtonFor(model => model.Permission, 3, new { id = "adminPerm" })
     @Html.Label("adminPerm", "Admin")
 
-            <button class="btn btn-default" type="submit" id="ShareAndReturn" name="action" value="ShareAndReturn">Share & Return to Inventory</button>
-            <button class="btn btn-primary" type="submit" id="ShareAndShare" name="action" value="ShareAndShare">Share & add another person</button>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            @Html.ActionLink("Cancel", "Open", "Inventories", new { id = Model.InventoryId }, new { @class = "btn btn-warning" })
+            <button class="btn btn-default" type="submit" id="saveAndOpen" name="action" value="SaveAndOpen">Save & Return to Inventory</button>
+            <button class="btn btn-primary" type="submit" id="saveAndReturn" name="action" value="SaveAndCreate">Save & Return to Shared</button>
         </div>
+    </div>
 }

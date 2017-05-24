@@ -1,0 +1,39 @@
+﻿@model IQueryable<InventoryManager.Models.Sharing>
+
+@{
+    ViewBag.Title = "Shared";
+}
+
+<p><h2>Shared With Me</h2></p>
+
+<table class="table">
+    <tr>
+        <th>
+            Email
+        </th>
+        <th>
+            Access Level
+        </th>
+    </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.Permission)
+                </td>
+                <td>
+
+                @Html.ActionLink("Edit", "SharedEdit", "Inventories", new { Id = item.Id }, new { Class = "btn btn-default" })
+
+                @Html.ActionLink("Delete", "SharedDelete", "Inventories", new { id = item.Id }, new { Class = "btn btn-primary" })
+
+                </td> 
+            </tr>
+        }
+
+</table>

@@ -15,6 +15,7 @@ namespace InventoryManager.Controllers
     public class InventoriesController : Controller
     {
         private InventoryDbContext db = new InventoryDbContext();
+
         private ApplicationUserManager _userManager;
 
         public InventoriesController()
@@ -39,7 +40,6 @@ namespace InventoryManager.Controllers
             }
         }
 
-        // GET: Movies
         public ActionResult Index(string SearchString)
         {
             string currentUser = User.Identity.GetUserId();
@@ -59,6 +59,97 @@ namespace InventoryManager.Controllers
             return View(new InventoryListViewModel { Owned = owned.ToList(), Shared = shared.ToList() });
         }
 
+        public ActionResult Shared(int inventoryId)
+        {
+            string currentUserEmail = User.Identity.GetUserName();
+
+            IQueryable<Sharing> shared = db.SharedUsers.Where(e => e.InventoryId == inventoryId && e.Email != currentUserEmail).AsQueryable();
+
+            return View(shared);
+        }
+
+        public ActionResult SharedEdit(int? id)
+        {
+            string currentUser = User.Identity.GetUserId();
+
+            string currentUserEmail = User.Identity.GetUserName();
+
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            Sharing entry = db.SharedUsers.Where(e => e.Id == id).SingleOrDefault();
+
+            if (entry == null)
+            {
+                return HttpNotFound();
+            }
+            return View(entry);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult SharedEdit(/*[Bind(Include = "Name")]*/ Sharing entry, string action)
+        {
+            string currentUser = User.Identity.GetUserId();
+
+            string currentUserEmail = User.Identity.GetUserName();
+
+
+            bool isAllowed = db.Inventories.Where(inv => inv.Id == entry.InventoryId && (inv.UserId == currentUser || inv.SharedUsers.Any(s => s.Email == currentUserEmail && (s.Permission == AccessLevel.Edit || s.Permission == AccessLevel.Admin)))).Any();
+
+            if (ModelState.IsValid && isAllowed)
+            {
+                db.Entry(entry).State = EntityState.Modified;
+                db.SaveChanges();
+
+                if (action == "SaveAndOpen")
+                {
+                    return RedirectToAction("Open", "Inventories", new { id = entry.InventoryId });
+                }
+                else
+                {
+                    return RedirectToAction("Shared", "Inventories", new { inventoryid = entry.InventoryId });
+                }
+            }
+
+            return View(entry);
+        }
+
+        public ActionResult SharedDelete(int? id)
+        {
+            string currentUser = User.Identity.GetUserId();
+
+            string currentUserEmail = User.Identity.GetUserName();
+
+            Sharing entry = db.SharedUsers.Where(e => e.Id == id).SingleOrDefault();
+
+            bool isAllowed = db.Inventories.Where(inv => inv.Id == entry.InventoryId && (inv.UserId == currentUser || inv.SharedUsers.Any(s => s.Email == currentUserEmail && (s.Permission == AccessLevel.Edit || s.Permission == AccessLevel.Admin)))).Any();
+
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            if (entry == null || !isAllowed)
+            {
+                return HttpNotFound();
+            }
+            return View(entry);
+        }
+
+        [HttpPost, ActionName("SharedDelete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult SharedDeleteConfirmed(int id)
+        {
+            Sharing entry = db.SharedUsers.Find(id);
+            db.SharedUsers.Remove(entry);
+            db.SaveChanges();
+            return RedirectToAction("Open", "Inventories", new { id = entry.InventoryId });
+        }
+
         public ActionResult Sharing(int inventoryId)
         {
 
@@ -67,7 +158,7 @@ namespace InventoryManager.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Sharing( Models.Sharing entry, string action, string permission)
+        public ActionResult Sharing(Sharing entry, Invitations model, string action, string permission)
         {
             string currentUser = User.Identity.GetUserId();
 
@@ -76,28 +167,27 @@ namespace InventoryManager.Controllers
             if (ModelState.IsValid && ownedInventory)
             {
                 if (!UserManager.Users.Where(s => s.Email == entry.Email).Any())
-                {
-                    var body = "<p>Email From: {0} ({1})</p><p>Message:</p><p>{2}</p>";
+                { 
+                    var body = $"<p>{model.Message}</p>";
                     var message = new MailMessage();
-                    message.To.Add(new MailAddress(entry.Email)); 
-                    message.From = new MailAddress("sender@outlook.com");  // replace with valid value
-                    message.Subject = "Your email subject";
-                    message.Body = string.Format(body/*, model.FromName, model.FromEmail, model.Message*/);
+                    message.To.Add(new MailAddress(entry.Email));
+                    message.From = new MailAddress(model.FromEmail, model.FromName);  // replace with valid value
+                    message.Subject = "An Inventory has been shared with you!";
+                    message.Body = body;
                     message.IsBodyHtml = true;
 
                     using (var smtp = new SmtpClient())
                     {
                         var credential = new NetworkCredential
                         {
-                            UserName = "user@outlook.com",  // replace with valid value
-                            Password = "password"  // replace with valid value
+                            UserName = "inventory.it.invitation@gmail.com", 
+                            Password = "SecurePassword" 
                         };
                         smtp.Credentials = credential;
-                        smtp.Host = "smtp-mail.outlook.com";
+                        smtp.Host = "smtp.gmail.com";
                         smtp.Port = 587;
                         smtp.EnableSsl = true;
                         smtp.Send(message);
-                        return RedirectToAction("Sent");
                     }
                 }
 
@@ -122,16 +212,16 @@ namespace InventoryManager.Controllers
             return View();
         }
 
-        // POST: Movies/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(/*[Bind(Include = "Id, Name", Exclude = "UserId")]*/ Models.Inventory entry, string action)
         {
             string currentUser = User.Identity.GetUserId();
+
             entry.UserId = User.Identity.GetUserId();
+
             ModelState.Clear();
+
             TryUpdateModel(entry);
 
             if (ModelState.IsValid)
@@ -158,7 +248,7 @@ namespace InventoryManager.Controllers
             string currentUserEmail = User.Identity.GetUserName();
 
             InventoryViewModel inventory = db.Inventories.Include(inv => inv.Items).Where(inv => inv.Id == id && (inv.UserId == currentUser || inv.SharedUsers.Any(s => s.Email == currentUserEmail))).Select(InventoryViewModel.GetInstantiator(currentUser, currentUserEmail)).SingleOrDefault();
-            
+
             var categories = inventory.Items.Select(e => e.Category).Distinct().OrderBy(e => e);
             ViewBag.itemCategory = new SelectList(categories);
 
@@ -183,7 +273,7 @@ namespace InventoryManager.Controllers
             {
                 inventory.Items = inventory.Items.Where(s => s.Category.Trim().Equals(itemCategory.Trim(), StringComparison.InvariantCultureIgnoreCase)).ToList();
             }
-            if(!string.IsNullOrEmpty(itemType))
+            if (!string.IsNullOrEmpty(itemType))
             {
                 inventory.Items = inventory.Items.Where(s => s.Type.Trim().Equals(itemType.Trim(), StringComparison.InvariantCultureIgnoreCase)).ToList();
             }
@@ -193,19 +283,6 @@ namespace InventoryManager.Controllers
             }
             return View(inventory);
         }
-
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Open(string action)
-        //{
-        //    if (action == "Edit")
-        //    {
-
-        //    }else if(action == "Edit")
-        //    {
-
-        //    }
-        //}
 
         public ActionResult Delete(int? id)
         {
@@ -292,6 +369,5 @@ namespace InventoryManager.Controllers
 
             return View(inventory);
         }
-        
     }
 }

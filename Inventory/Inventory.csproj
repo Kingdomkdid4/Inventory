@@ -196,6 +196,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ContentRepository.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ItemController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -227,15 +228,16 @@
     <Compile Include="Migrations\201704280617524_Sharing.Designer.cs">
       <DependentUpon>201704280617524_Sharing.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201704281929130_SharingDb.cs" />
-    <Compile Include="Migrations\201704281929130_SharingDb.Designer.cs">
-      <DependentUpon>201704281929130_SharingDb.cs</DependentUpon>
+    <Compile Include="Migrations\201705181826314_final stuff.cs" />
+    <Compile Include="Migrations\201705181826314_final stuff.Designer.cs">
+      <DependentUpon>201705181826314_final stuff.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\Inventory.cs" />
     <Compile Include="Models\InventoryDbContext.cs" />
+    <Compile Include="Models\Invitations.cs" />
     <Compile Include="Models\Item.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Sharing.cs" />
@@ -313,6 +315,9 @@
     <Content Include="Views\Item\test.cshtml" />
     <Content Include="Views\Item\Details.cshtml" />
     <Content Include="Views\Inventories\Sharing.cshtml" />
+    <Content Include="Views\Inventories\Shared.cshtml" />
+    <Content Include="Views\Inventories\SharedEdit.cshtml" />
+    <Content Include="Views\Inventories\SharedDelete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -345,8 +350,8 @@
     <EmbeddedResource Include="Migrations\201704280617524_Sharing.resx">
       <DependentUpon>201704280617524_Sharing.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201704281929130_SharingDb.resx">
-      <DependentUpon>201704281929130_SharingDb.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201705181826314_final stuff.resx">
+      <DependentUpon>201705181826314_final stuff.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

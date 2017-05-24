@@ -34,7 +34,9 @@ namespace InventoryManager.Models
         public string Color { get; set; }
 
         
-        //public string ExtraInfo { get; set; }
+        public string Description { get; set; }
+
+        public byte[] Image { get; set; }
 
         [Required]
         public int InventoryId { get; set; }

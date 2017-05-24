@@ -7,13 +7,13 @@ namespace InventoryManager.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class SharingDb : IMigrationMetadata
+    public sealed partial class finalstuff : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(SharingDb));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(finalstuff));
         
         string IMigrationMetadata.Id
         {
-            get { return "201704281929130_SharingDb"; }
+            get { return "201705181826314_final stuff"; }
         }
         
         string IMigrationMetadata.Source

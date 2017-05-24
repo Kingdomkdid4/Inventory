@@ -28,14 +28,6 @@ namespace InventoryManager.Models
 
         public string DefaultColor { get; set; }
 
-        //public Item item { get; set; }
-
-        //public List<string> SharedEmailsWithFullAccess  = new List<string>();
-
-        //public List<string> SharedEmailsWithAddingAccess  = new List<string>();
-
-        //public List<string> SharedEmailsWithViewAccess  = new List<string>();
-
         public ICollection<Item> Items { get; set; }
 
         public ICollection<Sharing> SharedUsers { get; set; }

@@ -28,17 +28,22 @@
             </div>
         </div>*@
 
+    <h2>
+        don't forget to change this permission level @Html.DisplayFor(model => model.Permission)
+    </h2>
+
     if (Model.Permission == AccessLevel.Admin || Model.Permission == AccessLevel.Add || Model.Permission == AccessLevel.Edit)
     {
-        @Html.ActionLink("Create A New Item", "Create", "Item", new { inventoryId = Model.Id }, new { Class = "btn btn-default pull-right" });
+        @Html.ActionLink("Create A New Item", "Create", "Item", new { inventoryId = Model.Id }, new { Class = "btn btn-default pull-left" });
     }
     if (Model.Permission == AccessLevel.Admin)
     {
         @Html.ActionLink("Share this Inventory", "Sharing", "Inventories", new { inventoryId = Model.Id }, new { Class = "btn btn-primary pull-right" });
+        @Html.ActionLink("View Shared List", "Shared", "Inventories", new { inventoryId = Model.Id }, new { Class = "btn btn-default pull-right" });
     }
     if (Model.Permission == AccessLevel.Admin || Model.Permission == AccessLevel.Add || Model.Permission == AccessLevel.Edit)
     {
-        @Html.ActionLink("Edit the Inventory and Item Defaults", "Edit", "Inventories", new { Id = Model.Id }, new { Class = "btn btn-default pull-right" });
+        @Html.ActionLink("Edit the Inventory and Item Defaults", "Edit", "Inventories", new { Id = Model.Id }, new { Class = "btn btn-primary pull-left" });
     }
 
     <table class="table table-hover">
@@ -74,7 +79,7 @@
         </tr>
 
         @foreach (var item in Model.Items)
-        {
+                {
             <tr>
                 @*<td>
                         @Html.DisplayFor(modelItem => item.Id)
@@ -98,9 +103,16 @@
                     @Html.DisplayFor(modelItem => item.Color)
                 </td>
                 <td>
-                    <button class="btn btn-default" type="submit" id="edit" name="action" value="Edit">Edit</button>
-                    <button class="btn btn-primary" type="submit" id="delete" name="action" value="Delete">Delete</button>
-                    <button class="btn btn-default" type="submit" id="details" name="action" value="Details">Details</button>
+                    @if (Model.Permission == AccessLevel.Admin || Model.Permission == AccessLevel.Edit)
+                    {
+                        @Html.ActionLink("Edit", "Edit", "Item", new { Id = item.Id }, new { Class = "btn btn-default" })
+                    }
+                    @Html.ActionLink("Details", "Details", "Item", new { id = item.Id }, new { Class = "btn btn-primary" })
+
+                    @if (Model.Permission == AccessLevel.Admin || Model.Permission == AccessLevel.Edit)
+                    {
+                        @Html.ActionLink("Delete", "Delete", "Item", new { id = item.Id }, new { Class = "btn btn-default" })
+                    }
                 </td>
             </tr>
         }

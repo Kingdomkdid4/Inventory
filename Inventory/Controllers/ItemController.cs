@@ -134,22 +134,7 @@ namespace InventoryManager.Controllers
 
         public ActionResult Details(int? id)
         {
-            /*/string currentUser = User.Identity.GetUserId();
 
-            string currentUserEmail = User.Identity.GetUserName();
-
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-
-            Item item = db.Items.Where(e => e.Id == id).SingleOrDefault();
-
-            if (item == null)
-            {
-                return HttpNotFound();
-            }
-            return View(item);*/
 
             if (id == null)
             {
@@ -175,37 +160,6 @@ namespace InventoryManager.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Details(Item item, string action)
         {
-            /*string currentUser = User.Identity.GetUserId();
-
-            string currentUserEmail = User.Identity.GetUserName();
-
-            Sharing authUser = db.SharedUsers.Where(e => e.Email == currentUserEmail).SingleOrDefault();
-
-            bool ownedInventoryOrShared = false;
-
-            if (authUser != null)
-            {
-                ownedInventoryOrShared = db.Inventories.Where(e => (e.UserId == currentUser || authUser.Permission == AccessLevel.Admin || authUser.Permission == AccessLevel.Edit|| authUser.Permission == AccessLevel.Add) && e.Id == item.InventoryId).Any();
-            }
-
-            bool ownedInventory = db.Inventories.Where(e => e.UserId == currentUser && e.Id == item.InventoryId).Any();
-
-            if (ModelState.IsValid && (ownedInventory || ownedInventoryOrShared))
-            {
-                db.Entry(item).State = EntityState.Modified;
-                db.SaveChanges();
-
-                if (action == "SaveAndOpen")
-                {
-                    return RedirectToAction("Open", "Inventories", new { id = item.Id });
-                }
-                else
-                {
-                    return RedirectToAction("Index", "Inventories");
-                }
-            }
-
-            return View(item);*/
 
             string currentUser = User.Identity.GetUserId();
 

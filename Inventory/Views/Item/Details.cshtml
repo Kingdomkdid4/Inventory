@@ -12,8 +12,13 @@
     }
 </script>
 
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
 @using (Html.BeginForm("Details", "item", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
+    <input type="file" name="ImageData" id="ImageData" onchange="fileCheck(this);" />
+
     @Html.AntiForgeryToken()
 
     @Html.ValidationSummary(true)
@@ -21,9 +26,8 @@
     <div class="form-horizontal">
         <div class="form-group">
             @Html.LabelFor(model => model.Description , new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.TextAreaFor(model => model.Description, new { @class = "ckeditor", placeholder = "Discritption and any extra info" })
-                @Html.ValidationMessageFor(model => model.Description)
+            <div class="form-group">
+                <textarea class="form-control" rows="10" cols="40" id="comment"></textarea>
             </div>
         </div>
 
@@ -31,7 +35,7 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Save" class="btn btn-default" />
             </div>
         </div>
     </div>

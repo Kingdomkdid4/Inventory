@@ -164,6 +164,9 @@ namespace InventoryManager.Controllers
 
             bool ownedInventory = db.Inventories.Where(e => e.UserId == currentUser && e.Id == entry.InventoryId).Any();
 
+            //var user = UserManager.Users.Where(e => e.Id == currentUser);
+
+            //UserManager.FindById<>
             if (ModelState.IsValid && ownedInventory)
             {
                 if (!UserManager.Users.Where(s => s.Email == entry.Email).Any())
@@ -172,7 +175,7 @@ namespace InventoryManager.Controllers
                     var message = new MailMessage();
                     message.To.Add(new MailAddress(entry.Email));
                     message.From = new MailAddress(model.FromEmail, model.FromName);  // replace with valid value
-                    message.Subject = "An Inventory has been shared with you!";
+                    message.Subject = " Inventory has been shared with you!";
                     message.Body = body;
                     message.IsBodyHtml = true;
 
